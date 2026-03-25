@@ -22,35 +22,15 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: `あなたはアニメ業界のスタッフ情報に詳しい専門家です。
-Web検索ツールを使い、特に seesaawiki.jp/w/radioi_34（アニメスタッフデータベース）を参照して情報を収集してください。
-検索クエリ例: "site:seesaawiki.jp/w/radioi_34 [スタッフ名]"
-
-必ずJSON形式のみで返してください。マークダウン記号・前置き・説明は一切不要です。
-
-返すJSON形式:
-{
-  "name": "正式名",
-  "nameReading": "読み仮名（わかれば）",
-  "role": "主な役職",
-  "known": true,
-  "works": [
-    {"title": "作品名", "year": "放送年", "role": "担当役職", "company": "制作会社"}
-  ],
-  "companies": [
-    {"name": "会社名", "count": 作品数}
-  ],
-  "summary": "300字程度のプロフィール",
-  "sources": ["参照したURLや情報源"]
-}
-
-スタッフが見つからない場合: {"known": false, "name": "入力された名前"}`,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1000,
+        system: `アニメスタッフ情報の専門家。JSON形式のみで返答。説明不要。
+{"name":"名前","nameReading":"読み","role":"役職","known":true,"works":[{"title":"作品名","year":"年","role":"役割","company":"会社"}],"companies":[{"name":"会社名","count":数}],"summary":"概要100字","sources":[]}
+不明な場合:{"known":false,"name":"名前"}`,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{
           role: 'user',
-          content: `アニメスタッフ「${name.trim()}」について、seesaawiki.jp/w/radioi_34 を中心にWeb検索で詳しく調べ、参加作品リストと関わった制作会社をJSONで返してください。できるだけ多くの作品を収集してください。`
+          content: `「${name.trim()}」のアニメスタッフ情報をseesaawiki.jp/w/radioi_34で検索してJSONで返して。`
         }]
       })
     });
